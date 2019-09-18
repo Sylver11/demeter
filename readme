@@ -1,0 +1,27 @@
+///////////// Demeter - make it green ////////////
+
+Components:
+1.Sensors 
+2.Camera 
+3.Controller (Raspi)
+4.LCD display
+5.Web-app
+6.Arduino script  
+
+
+Basic functionality of the webservice:
+-login prompt
+-display of temp, hum, and soil moisture
+-livestream of camera 
+-time
+-adjust max min temp/hum
+-adjust light settings 
+-manual override of extraction fan, lights, fan
+-arlam (parameters exceeded) 
+-watering suggestion
+
+LCD display:
+-show temp, hum, soil moisture
+-watering suggestion
+
+  
