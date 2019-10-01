@@ -1,3 +1,5 @@
+import serial
+import struct
 import io
 import picamera
 import logging
@@ -16,6 +18,9 @@ PAGE="""\
 </body>
 </html>
 """
+
+bge.arduino = serial.Serial('/dev/ttyACM0', 9600) #the usb port might be different needs revision 
+bge.arduino.write(struct.pack('>B', 45))#sending binary code I just struggle to put actual values in here. 
 
 class StreamingOutput(object):
     def __init__(self):
@@ -81,7 +86,7 @@ with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
     output = StreamingOutput()
     camera.start_recording(output, format='mjpeg')
     try:
-        address = ('', 4000)
+        address = ('', 4003)
         server = StreamingServer(address, StreamingHandler)
         server.serve_forever()
     finally:
