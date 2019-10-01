@@ -15,12 +15,14 @@ PAGE="""\
 <body>
 <h1>PiCamera MJPEG Streaming Demo</h1>
 <img src="stream.mjpg" width="640" height="480" />
+$b
 </body>
 </html>
 """
 
-bge.arduino = serial.Serial('/dev/ttyACM0', 9600) #the usb port might be different needs revision 
-bge.arduino.write(struct.pack('>B', 45))#sending binary code I just struggle to put actual values in here. 
+ser = serial.Serial('ttyACM0',9600)
+time.sleep(2)
+b = ser.readline()
 
 class StreamingOutput(object):
     def __init__(self):
