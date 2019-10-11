@@ -1,6 +1,4 @@
-
 from flask import Flask, render_template, Response, request
-import itertools
 from camera_pi import Camera
 import serial
 import time
@@ -10,8 +8,12 @@ import time
 
 def getENVdata():
     arduino = serial.Serial('/dev/ttyACM0',9600)
-    time.sleep(2)
-    return arduino 
+ #   time.sleep(2)
+    value1 = str(eval(arduino.readline()))
+    value2 = str(eval(arduino.readline()))
+    print (value1)
+    print (value2)
+    return value1, value2
     
 app = Flask(__name__)
 
@@ -19,15 +21,11 @@ app = Flask(__name__)
 def index():
     if request.headers.get('accept') == 'text/event-stream':
         def events():
-            result = getENVdata()
+           # value1, value2 = getENVdata()
             while True:
-                value1 = str(eval(arduino.readline()))
-                value2 = str(eval(arduino.readline()))
-                yield "data: {value1} {value2}"
-
-           # for i, c in enumerate(itertools.cycle('\|/-')):
-            #    yield "data: %s %d\n\n" % (c, i)
-                time.sleep(.1)
+                value1, value2 = getENVdata()
+                yield "data: %s \s\s %s \n\n" % (value1, value2)
+               # time.sleep(.1)
         return Response(events(), content_type='text/event-stream')
     return render_template('index.html')
 
