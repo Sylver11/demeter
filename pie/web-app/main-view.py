@@ -1,7 +1,8 @@
+import time
 import serial
-import struct
 import io
 import picamera
+import sys
 import logging
 import socketserver
 from threading import Condition
@@ -15,14 +16,20 @@ PAGE="""\
 <body>
 <h1>PiCamera MJPEG Streaming Demo</h1>
 <img src="stream.mjpg" width="640" height="480" />
-$b
 </body>
 </html>
 """
 
-ser = serial.Serial('ttyACM0',9600)
-time.sleep(2)
-b = ser.readline()
+ #ser = serial.Serial('/dev/ttyACM0',9600)
+ #time.sleep(2)
+ #while True:
+#	data = ser.readline()[:-2] #the last bit gets rid of the new-line chars
+#	if data:
+#		print (data)
+
+
+
+
 
 class StreamingOutput(object):
     def __init__(self):
