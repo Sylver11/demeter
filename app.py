@@ -11,9 +11,11 @@ def getENVdata():
  #   time.sleep(2)
     value1 = str(eval(arduino.readline()))
     value2 = str(eval(arduino.readline()))
+    value3 = str(eval(arduino.readline()))
     print (value1)
     print (value2)
-    return value1, value2
+    print (value3)
+    return value1, value2, value3
     
 app = Flask(__name__)
 
@@ -23,7 +25,7 @@ def index():
         def events():
            # value1, value2 = getENVdata()
             while True:
-                value1, value2 = getENVdata()
+                value1, value2, value3 = getENVdata()
                 yield "data: %s \s\s %s \n\n" % (value1, value2)
                # time.sleep(.1)
         return Response(events(), content_type='text/event-stream')
