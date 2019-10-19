@@ -29,7 +29,7 @@ void setup() {
   digitalWrite(pinOut3, HIGH);
   digitalWrite(pinOut4, HIGH);
 
-    lcd.begin(20, 4);
+  lcd.begin(20, 4);
 
   if (!bme.begin())
   {
@@ -38,93 +38,92 @@ void setup() {
   }
 }
 
+void loop()
+{
 
+  for (int i = 0; i <= 100; i++)
+  {
+    sensorValue = sensorValue + analogRead(SensorPin);
+    delay(1);
+  }
+  sensorValue = sensorValue / 100.0;
 
-void loop() {
+  Serial.println(bme.readTemperature());
+  Serial.println(bme.readHumidity());
+  Serial.println(sensorValue);
 
- for (int i = 0; i <= 100; i++)
- {
-   sensorValue = sensorValue + analogRead(SensorPin);
-   delay(1);
- }
- sensorValue = sensorValue/100.0;
-
-
-Serial.println(bme.readTemperature());
-Serial.println(bme.readHumidity());
-Serial.println(sensorValue);
-
-
-
-  lcd.setCursor(0,0);
-  lcd.print("Temp: ");lcd.print(bme.readTemperature()); lcd.print(" "); lcd.print((char)223); lcd.print("C");
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(bme.readTemperature());
+  lcd.print(" ");
+  lcd.print((char)223);
+  lcd.print("C");
   lcd.setCursor(0, 1);
-  lcd.print("Hum: ");lcd.print(bme.readHumidity()); lcd.print(" "); lcd.print("%");
+  lcd.print("Hum: ");
+  lcd.print(bme.readHumidity());
+  lcd.print(" ");
+  lcd.print("%");
   lcd.setCursor(0, 2);
-  lcd.print("Soil: ");lcd.print(sensorValue);
+  lcd.print("Soil: ");
+  lcd.print(sensorValue);
   lcd.setCursor(0, 3);
   //lcd.print("AirPr: ");lcd.print(bme.readPressure() / 100); lcd.print(" mb");
   lcd.print(incoming[0]);
 
+  // digitalWrite(pinOut1, HIGH);
+  // digitalWrite(pinOut2, HIGH);
+  // digitalWrite(pinOut3, HIGH);
+  // digitalWrite(pinOut4, HIGH);
 
-// digitalWrite(pinOut1, HIGH);
-// digitalWrite(pinOut2, HIGH);
-// digitalWrite(pinOut3, HIGH);
-// digitalWrite(pinOut4, HIGH);
-
-
-// if (Serial.available() > 0)
-//  {
-//    char option = Serial.read();
-//    if (option == '1')
-//    {
-//      digitalWrite(pinOut1, LOW);
-//
-//    }
-//  }
+  // if (Serial.available() > 0)
+  //  {
+  //    char option = Serial.read();
+  //    if (option == '1')
+  //    {
+  //      digitalWrite(pinOut1, LOW);
+  //
+  //    }
+  //  }
 
   if (Serial.available() >= 0)
   {
-	  //    int maxTemp = Serial.parseInt();
-	  //    int minTemp = Serial.parseInt();
-	  for (int i = 0; i < 2; i++){
+    //    int maxTemp = Serial.parseInt();
+    //    int minTemp = Serial.parseInt();
+    for (int i = 0; i < 2; i++)
+    {
+      if (Serial.read() != null) {
+        incoming[i] = Serial.read();
+      }
+    }
 
-		  incoming[i] = Serial.read();
-	  }
-
-	  if (bme.readTemperature() >= incoming[0])
-	  {
-		  digitalWrite(pinOut1, LOW);
-	  }
-	  else if(bme.readTemperature() <= incoming[1])
-	  {
-		  digitalWrite(pinOut1, HIGH);
-	  } 
+    if (bme.readTemperature() >= incoming[0])
+    {
+      digitalWrite(pinOut1, LOW);
+    }
+    else if (bme.readTemperature() <= incoming[1])
+    {
+      digitalWrite(pinOut1, HIGH);
+    }
   }
 
-
- 
-
-
-
-//  if (bme.readTemperature() >=30){
-//    digitalWrite(pinOut1, LOW);
-//  }
-//  else if (bme.readTemperature() <=27){
-//    digitalWrite(pinOut1, HIGH);
-//  }
-//////////////////////////////////////////////////////
-// while(Serial.available() >= 3){
-//    // fill array
-//    for (int i = 0; i < 3; i++){
-//      incoming[i] = Serial.read();
-//    }
-//    // instead of servo's we need to put the variables here from the if else statment above subsituting values 27 and 30 with variables
-//    servo0.write(incoming[0]);
-//    servo1.write(incoming[1]);
-//    servo2.write(incoming[2]);
-//  }
-///////////////////////////////////////////////////
+  //  if (bme.readTemperature() >=30){
+  //    digitalWrite(pinOut1, LOW);
+  //  }
+  //  else if (bme.readTemperature() <=27){
+  //    digitalWrite(pinOut1, HIGH);
+  //  }
+  //////////////////////////////////////////////////////
+  // while(Serial.available() >= 3){
+  //    // fill array
+  //    for (int i = 0; i < 3; i++){
+  //      incoming[i] = Serial.read();
+  //    }
+  //    // instead of servo's we need to put the variables here from the if else statment above subsituting values 27 and 30 with variables
+  //    servo0.write(incoming[0]);
+  //    servo1.write(incoming[1]);
+  //    servo2.write(incoming[2]);
+  //  }
+  ///////////////////////////////////////////////////
 
   delay(1000);
 }
