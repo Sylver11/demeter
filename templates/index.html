@@ -1,21 +1,50 @@
 <html>
   <head>
-    <title>MJRoBot Lab Live Streaming</title>
+    <title>Demeter - make it green</title>
     <link rel="stylesheet" href='../static/style.css'/>
+    <script type=text/javascript src="{{
+    url_for('static', filename='jquery-1.9.0.js') }}"></script>
+      <script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
   </head>
   <body>
-    <h1>MJRoBot Lab Live Streaming</h1>
+    <h1>Demeter - make it green</h1>
     <h3><img src="{{ url_for('video_feed') }}" width="90%"></h3>
     <hr>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 if (!!window.EventSource) {
-  var source = new EventSource('/');
+  var source = new EventSource('/feed');
   source.onmessage = function(e) {
     $("#data").text(e.data);
   }
 }
 </script>
 <div id="data"></div>
+
+
+
+<script type=text/javascript>
+    $(function() {
+      $('a#calculate').bind('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/_temp', {
+          temp: $('input[name="temp"]').val(),
+          hum: $('input[name="hum"]').val()
+        }, function(data) {
+          $("#result").text(data.result);
+        });
+        return false;
+      });
+    });
+  </script>
+  <h1>Set environment parameters</h1>
+  <p><input type=text size=2 name=temp>
+     <input type=text size=2 name=hum>
+     <span id=result></span>
+  <p><a href=# id=calculate>Set new parameters</a>
+
+
+
   </body>
 </html>
