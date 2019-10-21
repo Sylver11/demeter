@@ -1,54 +1,78 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, session
 from camera_pi import Camera
 import serial
 import time
+from time import sleep
 
+def arduinoConn():
+    arduino = serial.Serial('/dev/ttyACM0',
+            baudrate=9600,
+            bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            timeout=2,
+            xonxoff=0,
+            rtscts=0)
+    arduino.setRTS(False)
+    sleep(3)
+    arduino.flush()
+    arduino.setRTS(True)
+    return arduino
 
 def getENVdata():
-    arduino = serial.Serial('/dev/ttyACM0',9600)
-   # time.sleep(2)
-    value1 = str(eval(arduino.readline()))
-    value2 = str(eval(arduino.readline()))
-    value3 = str(eval(arduino.readline()))
-    # print (value1)
-    # print (value2)
-    # print (value3)
-    return value1, value2, value3
+    if (session.get('channel_busy')==False):
+        arduino = arduinoConn()
+        if (arduino.inWaiting()>19):
+            print(arduino.inWaiting())
+            data_str = arduino.read(arduino.inWaiting()).decode('ascii')
+        #print (data_str[0])
+        #data_str = list(map(int, input().split()))
+        #data_str = list(map(str, data_str.split()))
+
+            data_str = [str(item) for item in data_str.split()]
+            print(data_str)
+            value1 = data_str[0]
+            value2 = data_str[1]
+            value3 = data_str[2]
+        #value1 = str(eval(arduino.readline()))
+        #value2 = str(eval(arduino.readline()))
+        #value3 = str(eval(arduino.readline()))
+            return value1, value2, value3
+        else:
+            return '','',''
+        #return data_str[0], data_str[1], data_str[2]
+    else:
+        return '','',''
     
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-   # if request.headers.get('accept') == 'text/event-stream':
-    #    def events():
-           # value1, value2 = getENVdata()
-     #       while True:
-      #          value1, value2, value3 = getENVdata()
-       #         yield "data: %s \s\s %s \n\n" % (value1, value2)
-               # time.sleep(.1)
-      #  return Response(events(), content_type='text/event-stream')
+    channel_busy = {'key':'value'}
+    session['channel_busy'] = False
     return render_template('index.html')
 
 @app.route('/feed')
 def ENVdata():
     if request.headers.get('accept') == 'text/event-stream':
         value1, value2, value3 = getENVdata()
-        # yield "data: %s \s\s %s \n\n" % (value1, value2)
         return Response("data: %s %s %s \n\n" % (value1, value2, value3), content_type='text/event-stream')
 
 
 @app.route('/_temp')
 def add_numbers():
-   # arduino = getENVdata()
     a = request.args.get('temp', 0, type=int)
     b = request.args.get('hum', 0, type=int)
-    #return jsonify(result=a + b)
+    session['channel_busy'] = True
+    print (session.get('channel_busy'))
+    arduino = arduinoConn()
     print (a)
     print (b)
-    arduino = serial.Serial('/dev/ttyACM0',9600)
    # import pdb;pdb.set_trace()
     arduino.write(a)
-    arduino.write(b)
+   # arduino.write(b)
+    session['channel_busy']= False
+    print (session.get('channel_busy'))
     return ""
 
 
@@ -66,4 +90,7 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
+    
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(host='0.0.0.0', port =4003, debug=True, threaded=True)

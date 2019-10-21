@@ -17,7 +17,10 @@
 if (!!window.EventSource) {
   var source = new EventSource('/feed');
   source.onmessage = function(e) {
-    $("#data").text(e.data);
+	  console.log(e.data);
+	   
+    		$("#data").text(e.data);
+		  console.log(e.data)
   }
 }
 </script>

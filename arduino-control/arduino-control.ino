@@ -10,11 +10,12 @@ int pinOut4 = 11;
 
 int maxTemp ;
 int minTemp ;
-int incoming[2];
+int incoming[1];
+int serialRead ; 
 
 #define SensorPin A0
 float sensorValue = 0;
-
+String readString;
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
 void setup() {
@@ -24,17 +25,20 @@ void setup() {
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
 
-  digitalWrite(pinOut1, HIGH);
-  digitalWrite(pinOut2, HIGH);
-  digitalWrite(pinOut3, HIGH);
-  digitalWrite(pinOut4, HIGH);
-
+ digitalWrite(pinOut1, HIGH);  
+ digitalWrite(pinOut2, HIGH);  
+ digitalWrite(pinOut3, HIGH);  
+ digitalWrite(pinOut4, HIGH);  
+ 
   lcd.begin(20, 4);
 
   if (!bme.begin())
   {
     Serial.println("Error! No BMP Sensor Detected!!!");
     while (1);
+  }
+ while (!Serial) {
+	; // wait for serial port to connect.
   }
 }
 
@@ -68,43 +72,52 @@ void loop()
   lcd.print(sensorValue);
   lcd.setCursor(0, 3);
   //lcd.print("AirPr: ");lcd.print(bme.readPressure() / 100); lcd.print(" mb");
-  lcd.print(incoming[0]);
+  lcd.print(maxTemp);
 
-  // digitalWrite(pinOut1, HIGH);
-  // digitalWrite(pinOut2, HIGH);
-  // digitalWrite(pinOut3, HIGH);
-  // digitalWrite(pinOut4, HIGH);
 
-  // if (Serial.available() > 0)
-  //  {
-  //    char option = Serial.read();
-  //    if (option == '1')
-  //    {
-  //      digitalWrite(pinOut1, LOW);
-  //
-  //    }
-  //  }
 
-  if (Serial.available() >= 0)
+//if(Serial.available() > 0){      // if data present, blink
+  //     digitalWrite(pinOut1, LOW);
+    //   delay(1000);            
+      // digitalWrite(pinOut1, HIGH);
+      // delay(1000);
+     //  Serial.flush();
+// }
+
+// serial read section
+  while (Serial.available()) // this will be skipped if no data present, leading to
+                             // the code sitting in the delay function below
   {
-    //    int maxTemp = Serial.parseInt();
-    //    int minTemp = Serial.parseInt();
-    for (int i = 0; i < 2; i++)
+    delay(30);  //delay to allow buffer to fill 
+    if (Serial.available() >0)
     {
-      if (Serial.read() != null) {
-        incoming[i] = Serial.read();
-      }
+      maxTemp = Serial.read();  //gets one byte from serial buffer
+     // readString = c; //makes the string readString
     }
+  }
 
-    if (bme.readTemperature() >= incoming[0])
+//  if (Serial.available() >= 0)
+ // {
+   //     int maxTemp = Serial.parseInt();
+     //   int minTemp = Serial.parseInt();
+  //  for (int i = 0; i < 1; i++)
+   // {
+    //  serialRead = Serial.read();
+     // if (serialRead != -1) {
+       // incoming[i] = serialRead;
+    	// }
+//	incoming[] =1,3
+  // }
+
+    if (bme.readTemperature() >= maxTemp)
     {
       digitalWrite(pinOut1, LOW);
-    }
-    else if (bme.readTemperature() <= incoming[1])
+   }
+    else if (bme.readTemperature() <= minTemp)
     {
       digitalWrite(pinOut1, HIGH);
     }
-  }
+  
 
   //  if (bme.readTemperature() >=30){
   //    digitalWrite(pinOut1, LOW);
@@ -125,5 +138,5 @@ void loop()
   //  }
   ///////////////////////////////////////////////////
 
-  delay(1000);
+  delay(2000);
 }
