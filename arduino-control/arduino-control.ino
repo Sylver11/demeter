@@ -9,9 +9,13 @@ int pinOut3 = 10;
 int pinOut4 = 11;
 
 int maxTemp ;
-int minTemp ;
-int incoming[1];
-int serialRead ; 
+int minTemp ; 
+
+const byte numChars = 6;
+char receivedChars[numChars];
+//int receivedChars = 0;
+boolean newData = false;
+
 
 #define SensorPin A0
 float sensorValue = 0;
@@ -37,24 +41,19 @@ void setup() {
     Serial.println("Error! No BMP Sensor Detected!!!");
     while (1);
   }
- while (!Serial) {
-	; // wait for serial port to connect.
-  }
+// while (!Serial) {
+//	; // wait for serial port to connect.
+ // }
 }
 
 void loop()
 {
-
   for (int i = 0; i <= 100; i++)
   {
     sensorValue = sensorValue + analogRead(SensorPin);
     delay(1);
   }
   sensorValue = sensorValue / 100.0;
-
-  Serial.println(bme.readTemperature());
-  Serial.println(bme.readHumidity());
-  Serial.println(sensorValue);
 
   lcd.setCursor(0, 0);
   lcd.print("Temp: ");
@@ -72,42 +71,9 @@ void loop()
   lcd.print(sensorValue);
   lcd.setCursor(0, 3);
   //lcd.print("AirPr: ");lcd.print(bme.readPressure() / 100); lcd.print(" mb");
-  lcd.print(maxTemp);
+  lcd.print(receivedChars[0]);lcd.print(receivedChars[1]);lcd.print("high is:");lcd.print(receivedChars[2]);lcd.print(receivedChars[3]);
 
 
-
-//if(Serial.available() > 0){      // if data present, blink
-  //     digitalWrite(pinOut1, LOW);
-    //   delay(1000);            
-      // digitalWrite(pinOut1, HIGH);
-      // delay(1000);
-     //  Serial.flush();
-// }
-
-// serial read section
-  while (Serial.available()) // this will be skipped if no data present, leading to
-                             // the code sitting in the delay function below
-  {
-    delay(30);  //delay to allow buffer to fill 
-    if (Serial.available() >0)
-    {
-      maxTemp = Serial.read();  //gets one byte from serial buffer
-     // readString = c; //makes the string readString
-    }
-  }
-
-//  if (Serial.available() >= 0)
- // {
-   //     int maxTemp = Serial.parseInt();
-     //   int minTemp = Serial.parseInt();
-  //  for (int i = 0; i < 1; i++)
-   // {
-    //  serialRead = Serial.read();
-     // if (serialRead != -1) {
-       // incoming[i] = serialRead;
-    	// }
-//	incoming[] =1,3
-  // }
 
     if (bme.readTemperature() >= maxTemp)
     {
@@ -119,24 +85,53 @@ void loop()
     }
   
 
-  //  if (bme.readTemperature() >=30){
-  //    digitalWrite(pinOut1, LOW);
-  //  }
-  //  else if (bme.readTemperature() <=27){
-  //    digitalWrite(pinOut1, HIGH);
-  //  }
-  //////////////////////////////////////////////////////
-  // while(Serial.available() >= 3){
-  //    // fill array
-  //    for (int i = 0; i < 3; i++){
-  //      incoming[i] = Serial.read();
-  //    }
-  //    // instead of servo's we need to put the variables here from the if else statment above subsituting values 27 and 30 with variables
-  //    servo0.write(incoming[0]);
-  //    servo1.write(incoming[1]);
-  //    servo2.write(incoming[2]);
-  //  }
-  ///////////////////////////////////////////////////
+ recvWithStartEndMarkers();
+ showNewData();
 
-  delay(2000);
+  delay(1000);
+}
+
+
+
+
+void recvWithStartEndMarkers() {
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = '<';
+    char endMarker = '>';
+    char rc;
+ 
+    while (Serial.available() > 0 && newData == false) {
+        rc = Serial.read();
+
+        if (recvInProgress == true) {
+            if (rc != endMarker) {
+	//	receivedChars = rc;
+                receivedChars[ndx] = rc;
+                ndx++;
+                if (ndx >= numChars) {
+                    ndx = numChars - 1;
+                }
+            }
+            else {
+                receivedChars[ndx] = '\0'; // terminate the string
+                recvInProgress = false;
+                ndx = 0;
+                newData = true;
+            }
+        }
+
+        else if (rc == startMarker) {
+            recvInProgress = true;
+        }
+    }
+}
+
+void showNewData() {
+    if (newData == true) {
+	Serial.println(bme.readTemperature());    
+	Serial.println(bme.readHumidity());
+	Serial.println(sensorValue);
+	newData = false;
+    }
 }

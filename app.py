@@ -25,22 +25,14 @@ def getENVdata():
         if (arduino.inWaiting()>19):
             print(arduino.inWaiting())
             data_str = arduino.read(arduino.inWaiting()).decode('ascii')
-        #print (data_str[0])
-        #data_str = list(map(int, input().split()))
-        #data_str = list(map(str, data_str.split()))
-
             data_str = [str(item) for item in data_str.split()]
             print(data_str)
             value1 = data_str[0]
             value2 = data_str[1]
             value3 = data_str[2]
-        #value1 = str(eval(arduino.readline()))
-        #value2 = str(eval(arduino.readline()))
-        #value3 = str(eval(arduino.readline()))
             return value1, value2, value3
         else:
             return '','',''
-        #return data_str[0], data_str[1], data_str[2]
     else:
         return '','',''
     
@@ -61,16 +53,17 @@ def ENVdata():
 
 @app.route('/_temp')
 def add_numbers():
-    a = request.args.get('temp', 0, type=int)
-    b = request.args.get('hum', 0, type=int)
+    a = bytes(request.args.get('temp', 0, type=str), 'utf-8')
+    b = bytes(request.args.get('hum', 0, type=str), 'utf-8')
     session['channel_busy'] = True
     print (session.get('channel_busy'))
     arduino = arduinoConn()
     print (a)
     print (b)
-   # import pdb;pdb.set_trace()
+    arduino.write(bytes('<', 'utf-8'))
     arduino.write(a)
-   # arduino.write(b)
+    arduino.write(b)
+    arduino.write(bytes('>', 'utf-8'))
     session['channel_busy']= False
     print (session.get('channel_busy'))
     return ""
