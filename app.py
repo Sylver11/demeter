@@ -3,6 +3,29 @@ from camera_pi import Camera
 import serial
 import time
 from time import sleep
+from db_utils import db_connect
+
+
+con = db_connect() # connect to the database
+#cur = con.cursor() # instantiate a cursor obj
+#lock_sql = """
+#CREATE TABLE lock (
+#id integer PRIMARY KEY,
+#busy BOOLEAN NOT NULL CHECK (busy IN (0,1)))"""
+#cur.execute(lock_sql)
+
+
+#env_settings = """
+#CREATE TABLE env_settings (
+#id integer,
+#temperature TEXT,
+#humidity TEXT )"""
+
+#cur.execute(env_settings)
+
+
+#when receiving the string lockP the lock tables must be set to 1 and changed to 0 again after it has written to the arduino
+#when writing to the arduino it needs to grab the lastest set of values written to the env_settings table
 
 def arduinoConn():
     arduino = serial.Serial('/dev/ttyACM0',
@@ -16,12 +39,13 @@ def arduinoConn():
     arduino.setRTS(False)
     sleep(3)
     arduino.flush()
-    arduino.setRTS(True)
+#    arduin.setRTS(True)
     return arduino
 
 def getENVdata():
-    if (session.get('channel_busy')==False):
+    if not session.get('channel_busy'):
         arduino = arduinoConn()
+        print(arduino.inWaiting())
         if (arduino.inWaiting()>19):
             print(arduino.inWaiting())
             data_str = arduino.read(arduino.inWaiting()).decode('ascii')
@@ -31,10 +55,18 @@ def getENVdata():
             value2 = data_str[1]
             value3 = data_str[2]
             return value1, value2, value3
-        else:
-            return '','',''
+        if (arduino.inWaiting() == 'LockP'):
+            print("LockP was received")
+            session['channel_busy'] = True
+            arduinoWrite()
+            value1 = "test"
+            value2 = "test2"
+            value3 = "test3"
+            return value1, value2, value3
+        else: 
+            return ("none",)*3
     else:
-        return '','',''
+        return 'none','none','none'
     
 app = Flask(__name__)
 
@@ -55,9 +87,29 @@ def ENVdata():
 def add_numbers():
     a = bytes(request.args.get('temp', 0, type=str), 'utf-8')
     b = bytes(request.args.get('hum', 0, type=str), 'utf-8')
+    with con:
+        cur = con.cursor()
+        cur.execute("INSERT INTO env_settings (id, temperature, humidity) values (?, ?, ?)",(1, a, b))
+        con.commit()
+    return ''
+
+def arduinoWrite():
     session['channel_busy'] = True
     print (session.get('channel_busy'))
     arduino = arduinoConn()
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM env_settings")
+        while True:
+            row = cur.fetchone()
+            if row == None:
+                break
+        print(f"{row[0]} {row[1]}")
+        a = (f"{row[0]}")
+        b = (f"{row[1]}")
+        c = "dummy"
+        print("it successfully fetched the data from the database")
+        return a, b, c
     print (a)
     print (b)
     arduino.write(bytes('<', 'utf-8'))
@@ -66,7 +118,7 @@ def add_numbers():
     arduino.write(bytes('>', 'utf-8'))
     session['channel_busy']= False
     print (session.get('channel_busy'))
-    return ""
+    return "","",""
 
 
 def gen(camera):

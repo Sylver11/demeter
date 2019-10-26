@@ -9,12 +9,14 @@ int pinOut3 = 10;
 int pinOut4 = 11;
 
 int maxTemp ;
-int minTemp ; 
+int minTemp ;
+int lock = false; 
 
 const byte numChars = 6;
 char receivedChars[numChars];
 //int receivedChars = 0;
 boolean newData = false;
+static boolean recvInProgress = false;
 
 
 #define SensorPin A0
@@ -43,7 +45,7 @@ void setup() {
   }
 // while (!Serial) {
 //	; // wait for serial port to connect.
- // }
+//  }
 }
 
 void loop()
@@ -85,13 +87,14 @@ void loop()
     }
   
 
- recvWithStartEndMarkers();
  showNewData();
 
-  delay(1000);
+  delay(5000);
 }
 
-
+//print serial every 5 sec with hum and temp. At the second round print lockN and wait  5 additonal second to receive data. thereafter it prints to serial again 
+//script contiunelay checks what lock variable is set to and when lock is set to 1 then write variable from stored value to arduino and set lock again to 0   
+//python receives lockN and sets lock to 1 and 
 
 
 void recvWithStartEndMarkers() {
@@ -101,12 +104,11 @@ void recvWithStartEndMarkers() {
     char endMarker = '>';
     char rc;
  
-    while (Serial.available() > 0 && newData == false) {
+    while (Serial.available() > 0 && lock == true) {
         rc = Serial.read();
 
         if (recvInProgress == true) {
-            if (rc != endMarker) {
-	//	receivedChars = rc;
+            if (rc != endMarker) {;
                 receivedChars[ndx] = rc;
                 ndx++;
                 if (ndx >= numChars) {
@@ -117,21 +119,39 @@ void recvWithStartEndMarkers() {
                 receivedChars[ndx] = '\0'; // terminate the string
                 recvInProgress = false;
                 ndx = 0;
-                newData = true;
+               // newData = true;
+		lock = false;
             }
         }
 
         else if (rc == startMarker) {
             recvInProgress = true;
         }
+	else {
+	    lock = false;
+	}
     }
 }
 
 void showNewData() {
-    if (newData == true) {
-	Serial.println(bme.readTemperature());    
-	Serial.println(bme.readHumidity());
-	Serial.println(sensorValue);
-	newData = false;
-    }
+  //   while (!Serial) {
+//	; // wait for serial port to connect.
+//	}
+    if (lock == false){
+	Serial.println(bme.readTemperature());
+        Serial.println(bme.readHumidity());
+        Serial.println(sensorValue);
+	lock = true;
+	}
+    else if (lock == true){
+	Serial.println("LockP");
+	recvWithStartEndMarkers(); 
+	}
+
+   // if (newData == true) {
+//	Serial.println(bme.readTemperature());    
+//	Serial.println(bme.readHumidity());
+//	Serial.println(sensorValue);
+//	newData = false;
+//    }
 }
