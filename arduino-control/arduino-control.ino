@@ -102,13 +102,12 @@ void recvWithStartEndMarkers() {
     static byte ndx = 0;
     char startMarker = '<';
     char endMarker = '>';
-    char rc;
- 
-    while (Serial.available() > 0 && lock == true) {
+    char rc; 
+    while (Serial.available() > 0) {
         rc = Serial.read();
 
         if (recvInProgress == true) {
-            if (rc != endMarker) {;
+            if (rc != endMarker) {
                 receivedChars[ndx] = rc;
                 ndx++;
                 if (ndx >= numChars) {
@@ -131,6 +130,7 @@ void recvWithStartEndMarkers() {
 	    lock = false;
 	}
     }
+    lock = false;
 }
 
 void showNewData() {
@@ -145,7 +145,7 @@ void showNewData() {
 	}
     else if (lock == true){
 	Serial.println("LockP");
-	recvWithStartEndMarkers(); 
+	recvWithStartEndMarkers();  
 	}
 
    // if (newData == true) {
