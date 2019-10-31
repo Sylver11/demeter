@@ -18,9 +18,12 @@ if (!!window.EventSource) {
   var source = new EventSource('/feed');
   source.onmessage = function(e) {
 	  console.log(e.data);
+	  var regex = "none";
+	  if (!((e.data).match(regex))){
+
+	 	$("#data").text(e.data);
+	  }
 	   
-    		$("#data").text(e.data);
-		  console.log(e.data)
   }
 }
 </script>
