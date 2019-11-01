@@ -73,11 +73,11 @@ def ENVdata():
 
 @app.route('/_temp')
 def add_numbers():
-    now = datetime.now()
-    print("now =", now)
+   # now = datetime.now()
+   # print("now =", now)
     a = bytes(request.args.get('temp', 0, type=str), 'utf-8')
     b = bytes(request.args.get('hum', 0, type=str), 'utf-8')
-    c = now.strftime("%d/%m/%Y %H:%M:%S")
+   # c = now.strftime("%d/%m/%Y %H:%M:%S")
     database_io.write_temperature_settings_to_database(a, b)
     return Response()
 

@@ -73,6 +73,7 @@ void loop()
   lcd.print(sensorValue);
   lcd.setCursor(0, 3);
   //lcd.print("AirPr: ");lcd.print(bme.readPressure() / 100); lcd.print(" mb");
+// lcd.print(receivedChars);
   lcd.print(receivedChars[0]);lcd.print(receivedChars[1]);lcd.print("high is:");lcd.print(receivedChars[2]);lcd.print(receivedChars[3]);
 
 

@@ -26,12 +26,15 @@ def _arduino_connection():
 
 def write_temperature_settings(min_temperature, max_temperature):
    # session['channel_busy'] = True
-
+    print(type(min_temperature))
+   # min_temperature = str(min_temperature)
+   # max_temperature = str(max_temperature)
+    print(type(min_temperature))
     arduino = _arduino_connection()
-
+    print("writing env settings from database to arduino")
     arduino.write(bytes('<', 'utf-8'))
-    arduino.write(min_temperature)
-    arduino.write(max_temperature)
+    arduino.write(str(min_temperature).encode())
+    arduino.write(str(max_temperature).encode())
     arduino.write(bytes('>', 'utf-8'))
 
    # session['channel_busy'] = False
