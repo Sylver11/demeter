@@ -12,20 +12,21 @@ import database_io
 
 app = Flask(__name__)
 
+channel_busy = False
 
 @app.route('/_scheduled_Update')
 def scheduled_Update():
     getENVdata()
 
 def getENVdata():
-    if not session.get('channel_busy'):
+    if not channel_busy:
         data_str = arduino_io.get_environment_data_from_arduino()
         print(len(data_str))
         if re.search("LockP", data_str) is not None:
             print("LockP was received")
-            session['channel_busy'] = True
+            channel_busy = True
             transform.update_env_settings()
-            session['channel_busy'] = False
+            channel_busy = False
             return ("none",)*3
         elif len(data_str) >= 18 and len(data_str) <= 23:
             print("reading temps")
@@ -42,8 +43,6 @@ def getENVdata():
 
 @app.route('/')
 def index():
-   # channel_busy = {'key':'value'}
-    session['channel_busy'] = False
     return render_template('index.html')
 
 @app.route('/feed')
