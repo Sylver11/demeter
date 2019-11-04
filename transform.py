@@ -5,10 +5,8 @@ goes through here.
 import database_io
 import arduino_io
 
-
-
-def update_temperature_settings():
+def update_env_settings():
     min_temperature, max_temperature = database_io.read_temperature_settings() 
+    start, stop = database_io.read_light_settings()
+    arduino_io.write_env_settings(start, stop, min_temperature, max_temperature)
 
-    arduino_io.write_temperature_settings(min_temperature, max_temperature)
-    

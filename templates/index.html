@@ -28,29 +28,48 @@ if (!!window.EventSource) {
 }
 </script>
 <div id="data"></div>
-
+<h1>Set environment parameters</h1>
 
 
 <script type=text/javascript>
     $(function() {
-      $('a#calculate').bind('click', function() {
+      $('a#set_temp').bind('click', function() {
         $.getJSON($SCRIPT_ROOT + '/_temp', {
           temp: $('input[name="temp"]').val(),
           hum: $('input[name="hum"]').val()
         }, function(data) {
-          $("#result").text(data.result);
+          $("#env_settings_input").text(data.result);
         });
         return false;
       });
     });
   </script>
-  <h1>Set environment parameters</h1>
-  <p><input type=text size=2 name=temp>
-     <input type=text size=2 name=hum>
-     <span id=result></span>
-  <p><a href=# id=calculate>Set new parameters</a>
+  <h2>Set temperature settings</h2>
+  <p><input type=text min=15 max=32 size=2 name=temp>
+     <input type=text min=15 max=32 size=2 name=hum>
+     <span id=env_settings_input></span>
+  <p><a href=# id=set_temp>Set parameters</a>
 
 
+
+<script type=text/javascript>
+    $(function() {
+      $('a#set_light').bind('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/_light', {
+          start: $('input[name="start"]').val(),
+          stop: $('input[name="stop"]').val()
+        }, function(data) {
+          $("#light_settings_input").text(data.result);
+        });
+        return false;
+      });
+    });
+  </script>
+  <h2>Set light settings</h2>
+  <p><input type=number  min=1 max=2 size=10  name=start>
+     <input type=number min=1 max=2 size=10 name=stop>
+     <span id=light_settings_input></span>
+  <p><a href=# id=set_light>Set parameters</a>
 
   </body>
 </html>

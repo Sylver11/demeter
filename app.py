@@ -10,37 +10,21 @@ import transform
 import arduino_io
 import database_io
 
-#con = db_connect() # connect to the database
-#cur = con.cursor() # instantiate a cursor obj
-#lock_sql = """
-#CREATE TABLE lock (
-#id integer PRIMARY KEY,
-#busy BOOLEAN NOT NULL CHECK (busy IN (0,1)))"""
-#cur.execute(lock_sql)
+app = Flask(__name__)
 
 
-#env_settings = """
-#CREATE TABLE env_settings (
-#id integer,
-#temperature TEXT,
-#humidity TEXT )"""
-
-#cur.execute(env_settings)
-
-
-#when receiving the string lockP the lock tables must be set to 1 and changed to 0 again after it has written to the arduino
-#when writing to the arduino it needs to grab the lastest set of values written to the env_settings table
-
+@app.route('/_scheduled_Update')
+def scheduled_Update():
+    getENVdata()
 
 def getENVdata():
     if not session.get('channel_busy'):
         data_str = arduino_io.get_environment_data_from_arduino()
         print(len(data_str))
-       # x = re.search("LockP", data_str)
         if re.search("LockP", data_str) is not None:
             print("LockP was received")
             session['channel_busy'] = True
-            transform.update_temperature_settings()
+            transform.update_env_settings()
             session['channel_busy'] = False
             return ("none",)*3
         elif len(data_str) >= 18 and len(data_str) <= 23:
@@ -54,13 +38,11 @@ def getENVdata():
         else: 
             return ("none",)*3
     else:
-        return 'none','none','none'
-    
-app = Flask(__name__)
+        return ("none",)*3
 
 @app.route('/')
 def index():
-    channel_busy = {'key':'value'}
+   # channel_busy = {'key':'value'}
     session['channel_busy'] = False
     return render_template('index.html')
 
@@ -70,15 +52,21 @@ def ENVdata():
         value1, value2, value3 = getENVdata()
         return Response("data: %s %s %s \n\n" % (value1, value2, value3), content_type='text/event-stream')
 
-
 @app.route('/_temp')
 def add_numbers():
-   # now = datetime.now()
-   # print("now =", now)
     a = bytes(request.args.get('temp', 0, type=str), 'utf-8')
     b = bytes(request.args.get('hum', 0, type=str), 'utf-8')
-   # c = now.strftime("%d/%m/%Y %H:%M:%S")
     database_io.write_temperature_settings_to_database(a, b)
+    return Response()
+
+@app.route('/_light')
+def set_light_time():
+    #capture start stop time and write to the database. 
+    a = bytes(request.args.get('start', 0, type=str), 'utf-8')
+    b = bytes(request.args.get('stop', 0, type=str), 'utf-8')
+    print(a)
+    print(b)
+    database_io.write_light_settings_to_database(a,b)
     return Response()
 
 def gen(camera):
@@ -95,7 +83,6 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(host='0.0.0.0', port =4003, debug=True, threaded=True)
