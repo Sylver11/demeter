@@ -14,10 +14,6 @@ app = Flask(__name__)
 
 channel_busy = False
 
-@app.route('/_scheduled_Update')
-def scheduled_Update():
-    getENVdata()
-
 def getENVdata():
     if not channel_busy:
         data_str = arduino_io.get_environment_data_from_arduino()
@@ -40,6 +36,10 @@ def getENVdata():
             return ("none",)*3
     else:
         return ("none",)*3
+
+@app.route('/_scheduled_Update')
+def scheduled_Update():
+    getENVdata()
 
 @app.route('/')
 def index():
