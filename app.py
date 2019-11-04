@@ -10,36 +10,32 @@ import transform
 import arduino_io
 import database_io
 
+
 app = Flask(__name__)
 
-channel_busy = False
 
 def getENVdata():
-    if not channel_busy:
-        data_str = arduino_io.get_environment_data_from_arduino()
-        print(len(data_str))
-        if re.search("LockP", data_str) is not None:
-            print("LockP was received")
-            channel_busy = True
-            transform.update_env_settings()
-            channel_busy = False
-            return ("none",)*3
-        elif len(data_str) >= 18 and len(data_str) <= 23:
-            print("reading temps")
-            data_str = [str(item) for item in data_str.split()]
-            print(data_str)
-            value1 = data_str[0]
-            value2 = data_str[1]
-            value3 = data_str[2]
-            return value1, value2, value3
-        else: 
-            return ("none",)*3
-    else:
+    data_str = arduino_io.get_environment_data_from_arduino()
+    print(len(data_str))
+    if re.search("LockP", data_str) is not None:
+        print("LockP was received")
+        transform.update_env_settings()
+        return ("none",)*3
+    elif len(data_str) >= 18 and len(data_str) <= 23:
+        print("reading temps")
+        data_str = [str(item) for item in data_str.split()]
+        print(data_str)
+        value1 = data_str[0]
+        value2 = data_str[1]
+        value3 = data_str[2]
+        return value1, value2, value3
+    else: 
         return ("none",)*3
 
 @app.route('/_scheduled_Update')
 def scheduled_Update():
     getENVdata()
+    return ''
 
 @app.route('/')
 def index():
