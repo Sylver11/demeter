@@ -4,6 +4,7 @@
 from flask import session
 import serial
 import time
+import struct
 from datetime import datetime
 
 def _arduino_connection():
@@ -30,14 +31,20 @@ def write_env_settings(start, stop, min_temperature, max_temperature):
     arduino.write(bytes('<', 'utf-8'))
     if (int(current_time) > int(start.decode('ascii')) and int(current_time) < int(stop.decode('ascii'))):
         arduino.write(bytes('L', 'utf-8'))
-        arduino.write(bytes('1', 'utf-8'))
+        arduino.write(struct.pack('>B', 1))
+       # arduino.write(bytes('1', 'utf-8'))
         print("lights are being switched on")
     else:
         arduino.write(bytes('L', 'utf-8'))
-        arduino.write(bytes('0', 'utf-8'))
+        arduino.write(struct.pack('>B', 0))
         print("lights are being turned off")
-    arduino.write(str(min_temperature).encode())
-    arduino.write(str(max_temperature).encode())
+    print(type(min_temperature))
+    arduino.write(struct.pack('>B', min_temperature))
+    print(type(min_temperature))
+    #arduino.write(str(max_temperature, 'utf-8'))
+    print(type(min_temperature))
+    #arduino.write(int(min_temperature).encode())
+    arduino.write(struct.pack('>B', max_temperature))
     arduino.write(bytes('>', 'utf-8'))
 
 def get_environment_data_from_arduino():

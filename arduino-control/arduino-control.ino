@@ -14,8 +14,6 @@ int lock = false;
 
 const byte numChars = 6;
 char receivedChars[numChars];
-const byte lightChars = 3;
-char receivedLightChars[lightChars];
 //int receivedChars = 0;
 boolean newData = false;
 static boolean recvInProgress = false;
@@ -52,6 +50,8 @@ void setup() {
 
 void loop()
 {
+
+
   for (int i = 0; i <= 100; i++)
   {
     sensorValue = sensorValue + analogRead(SensorPin);
@@ -76,24 +76,32 @@ void loop()
   lcd.setCursor(0, 3);
   //lcd.print("AirPr: ");lcd.print(bme.readPressure() / 100); lcd.print(" mb");
 // lcd.print(receivedChars);
-  lcd.print(receivedChars[2]);lcd.print(receivedChars[3]);lcd.print("high is:");lcd.print(int(receivedChars[1]));
+  lcd.print(int(receivedChars[2]));lcd.print(int(receivedChars[3]));lcd.print("high is:");lcd.print(int(receivedChars[1]));
 
 
 
-    if (bme.readTemperature() >= receivedChars[0]+receivedChars[1])
+    if (bme.readTemperature() > int(receivedChars[3]))
     {
-      digitalWrite(pinOut1, LOW);
+      digitalWrite(pinOut2, LOW);
    }
-    else if (bme.readTemperature() <= minTemp)
+    else
     {
-      digitalWrite(pinOut1, HIGH);
+      digitalWrite(pinOut2, HIGH);
     }
+
+    if (bme.readTemperature() < int(receivedChars[2]))
+	{
+	digitalWrite(pinOut3, LOW);
+	}
+    else{
+	digitalWrite(pinOut3, HIGH);
+	}
 	
-    if (int(receivedChars[1]) == 49){ 
-	digitalWrite(pinOut2, LOW);
+    if (int(receivedChars[1]) == 1){ 
+	digitalWrite(pinOut1, LOW);
 	}
     else {
-	digitalWrite(pinOut2, HIGH);
+	digitalWrite(pinOut1, HIGH);
 	}
 
  showNewData();
@@ -117,9 +125,12 @@ void recvWithStartEndMarkers() {
 
         if (recvInProgress == true) {
             if (rc != endMarker) {
-                receivedChars[ndx] = rc;
-		// SerialSpeed1 = Serial.read()- '0';
+             //   char a = rc;
+        //	int c = (int)a - 48;
+//		receivedChars[ndx] = (int)a - 48;
+		receivedChars[ndx] = rc;
                 ndx++;
+		
                 if (ndx >= numChars) {
                     ndx = numChars - 1;
                 }
