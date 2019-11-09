@@ -8,8 +8,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <script type=text/javascript src="{{
+    url_for('static', filename='jquery-1.9.0.js') }}"></script>
+      <script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
 
-  <title>SB Admin 2 - Dashboard</title>
+  <title>Demeter - Dashboard</title>
 
   <!-- Custom fonts for this template-->
   <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -17,10 +22,38 @@
 
   <!-- Custom styles for this template-->
   <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="/static/css/styles-index.css" rel="stylesheet">
+  
 
 </head>
 
+
 <body id="page-top">
+    <script>
+        if (!!window.EventSource) {
+          var source = new EventSource('/feed');
+          source.onmessage = function(e) {
+            var res = e.data.split(" ", 3);
+            console.log(typeof e.data);
+            console.log(res);
+            var regex = "none";
+            if (!((e.data).match(regex))){
+             $('#moisture-preloader, #humidity-preloader, #temperature-preloader').addClass('loaded');
+            //  $('#mdb-preloader-humidity').addClass('loaded');
+            //  $('#mdb-preloader-temperature').addClass('loaded');
+             $("#current-temperature").text(res[0] + "°C");
+             $("#current-humidity").text(res[1] + "%");
+             $("#current-soil-moisture").text(res[2]);
+
+            }
+          }
+        }
+        </script>
+
+        <script>
+        // time-to-harvest
+        </script>
+
 
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -33,7 +66,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">Demeter<sup>1.00</sup></div>
       </a>
 
       <!-- Divider -->
@@ -73,14 +106,14 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>Utilities</span>
+          <span>Settings</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item" href="utilities-color.html">Colors</a>
-            <a class="collapse-item" href="utilities-border.html">Borders</a>
-            <a class="collapse-item" href="utilities-animation.html">Animations</a>
+            <h6 class="collapse-header">Environment Variables:</h6>
+            <a class="collapse-item" href="/lights">Lights</a>
+            <a class="collapse-item" href="utilities-border.html">Temperature</a>
+            <a class="collapse-item" href="utilities-animation.html">Humidity</a>
             <a class="collapse-item" href="utilities-other.html">Other</a>
           </div>
         </div>
@@ -340,17 +373,21 @@
           <!-- Content Row -->
           <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
+          
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Humidity</div>
+                      <div id="humidity-preloader">
+                          <div class="spinner-grow text-success" role="status">
+                          </div>
+                      </div>
+                      <div id="current-humidity" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                      <i class="fas fa-tint fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -363,11 +400,15 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Soil Moisture</div>
+                      <div id="moisture-preloader">
+                          <div class="spinner-grow text-success" role="status">
+                          </div>
+                      </div>
+                      <div id="current-soil-moisture" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-leaf fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -380,10 +421,10 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Approximate TIme to Harvest</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                          <div id="time-to-harvest" class="h5 mb-0 mr-3 font-weight-bold text-gray-800">4 Weeks</div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
@@ -393,7 +434,7 @@
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -406,8 +447,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Strain</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">AKA</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -427,10 +468,11 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Temperatue</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                      <i class="fas fa-thermometer-quarter fa-sm fa-fw text-gray-400"></i>
+                      <!-- <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i> -->
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                       <div class="dropdown-header">Dropdown Header:</div>
@@ -444,21 +486,41 @@
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
+                      <div id="temperature-preloader">
+                          <div class="spinner-grow text-success" role="status">
+                          </div>
+                      </div>
+                    <div><h3 id=current-temperature></h3></div>
+                    <!-- <canvas id="myAreaChart"></canvas> -->
                   </div>
                 </div>
               </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <!-- Pie Chart -->
             <div class="col-xl-4 col-lg-5">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Live-Stream</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                      <i class="fas fa-camera fa-sm fa-fw text-gray-400"></i>
+                      <!-- <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i> -->
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                       <div class="dropdown-header">Dropdown Header:</div>
@@ -470,7 +532,7 @@
                   </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
+                <!-- <div class="card-body">
                   <div class="chart-pie pt-4 pb-2">
                     <canvas id="myPieChart"></canvas>
                   </div>
@@ -485,7 +547,30 @@
                       <i class="fas fa-circle text-info"></i> Referral
                     </span>
                   </div>
+                </div> -->
+
+                <div class="card-body">
+                  <div class="chart-pie pt-4 pb-2">
+                    <!-- <canvas id="myPieChart"></canvas> -->
+                    <img src="{{ url_for('video_feed') }}" width="90%">
+                  </div>
+                  <div class="mt-4 text-center small">
+                    <!-- <span class="mr-2">
+                      <i class="fas fa-video-camera text-primary"></i> Direct
+                    </span> -->
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-success"></i> Live
+                    </span>
+                    <!-- <span class="mr-2">
+                      <i class="fas fa-circle text-info"></i> Referral
+                    </span> -->
+                  </div>
                 </div>
+
+
+
+
+
               </div>
             </div>
           </div>

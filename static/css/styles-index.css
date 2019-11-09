@@ -1,0 +1,18 @@
+#humidity-preloader.loaded {
+  opacity: 0;
+  display: none;
+  transition: .3s ease-in 1s;
+}
+
+#temperature-preloader.loaded {
+  opacity: 0;
+  display: none;
+  transition: .3s ease-in 1s;
+}
+
+#moisture-preloader.loaded {
+  opacity: 0;
+  display: none;
+  transition: .3s ease-in 1s;
+}
+

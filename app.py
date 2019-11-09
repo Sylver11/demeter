@@ -41,6 +41,12 @@ def scheduled_Update():
 def index():
     return render_template('index.html')
 
+
+@app.route('/lights/')
+def lights():
+    return render_template('lights.html')
+
+
 @app.route('/feed')
 def ENVdata():
     if request.headers.get('accept') == 'text/event-stream':
