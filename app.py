@@ -5,6 +5,7 @@ import time
 import re
 from time import sleep
 from datetime import datetime
+import struct
 
 import transform
 import arduino_io
@@ -44,7 +45,21 @@ def index():
 
 @app.route('/lights/')
 def lights():
-    return render_template('lights.html')
+    # start, stop= transform.display_light_settings_views()
+    min_temperature, max_temperature, start, stop = transform.update_env_settings()
+    # start = struct.unpack('<H',start)
+    env_settings = {
+        'start': int(start),
+        'stop': int(stop),
+        'min_temperature':int(min_temperature),
+        'max_temperature':int(max_temperature)
+    }
+    return render_template('lights.html', env_settings=env_settings)
+
+
+@app.route('/temperature/')
+def temperature():
+    return render_template('temperature.html')
 
 
 @app.route('/feed')
@@ -52,6 +67,11 @@ def ENVdata():
     if request.headers.get('accept') == 'text/event-stream':
         value1, value2, value3 = getENVdata()
         return Response("data: %s %s %s \n\n" % (value1, value2, value3), content_type='text/event-stream')
+
+# @app.route('/_display-light')
+# def display_light_settings():
+#     start, stop = transform.display_light_settings_views()
+#     return Response(start, stop)
 
 @app.route('/_temp')
 def add_numbers():

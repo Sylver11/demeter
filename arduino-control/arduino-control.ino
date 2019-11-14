@@ -3,8 +3,8 @@
 
 
 Adafruit_BME280 bme;
-int pinOut1 = 8;
-int pinOut2 = 9;
+int pinOut2 = 8;
+int pinOut1 = 9;
 int pinOut3 = 10;
 int pinOut4 = 11;
 
@@ -82,26 +82,26 @@ void loop()
 
     if (bme.readTemperature() > int(receivedChars[3]))
     {
-      digitalWrite(pinOut2, LOW);
+      digitalWrite(pinOut1, LOW);
    }
     else
     {
-      digitalWrite(pinOut2, HIGH);
+      digitalWrite(pinOut1, HIGH);
     }
 
     if (bme.readTemperature() < int(receivedChars[2]))
 	{
-	digitalWrite(pinOut3, LOW);
+	digitalWrite(pinOut2, LOW);
 	}
     else{
-	digitalWrite(pinOut3, HIGH);
+	digitalWrite(pinOut2, HIGH);
 	}
 	
     if (int(receivedChars[1]) == 1){ 
-	digitalWrite(pinOut1, LOW);
+	digitalWrite(pinOut4, LOW);
 	}
     else {
-	digitalWrite(pinOut1, HIGH);
+	digitalWrite(pinOut4, HIGH);
 	}
 
  showNewData();

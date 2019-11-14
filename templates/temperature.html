@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Demeter - Lights</title>
+  <title>Demeter - Make it Green</title>
 
   <!-- Custom fonts for this template-->
   <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -17,37 +17,6 @@
 
   <!-- Custom styles for this template-->
   <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
-
-
-
-  <!-- clockpicker custom styling -->
-  <link href="/static/clockpicker/dist/bootstrap-clockpicker.min.css" rel="stylesheet">
-  <link href="/static/clockpicker/src/clockpicker.css" rel="stylesheet">
-  <link href="/static/clockpicker/src/standalone.css" rel="stylesheet">
-  <link href="/static/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
-  <link href="/static/clockpicker/assets/bootstrap-theme.min.css" rel="stylesheet">
-  <link href="/static/clockpicker/assets/bootstrap.min.css" rel="stylesheet">
- 
-  
-  <script type=text/javascript src="{{
-    url_for('static', filename='jquery-1.9.0.js') }}"></script>
-      <script type=text/javascript>
-    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  </script>
-  
-
-  
-
-  <!-- <script src="/static/clockpicker/dist/bootstrap-clockpicker.js"></script>
-  <script src="/static/clockpicker/dist/jquery-clockpicker.js"></script>
-  <script src="/static/clockpicker/src/clockpicker.js"></script> -->
-
-<!-- Clockpicker functionality -->
-  <script type="text/javascript" src="/static/clockpicker/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/assets/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/dist/jquery-clockpicker.min.js"></script>
-
 
 </head>
 
@@ -64,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Demeter <sup>1.00</sup></div>
+        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
       </a>
 
       <!-- Divider -->
@@ -363,251 +332,83 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-1 text-gray-800">Set Temperature Parameters</h1>
-         
+          <h1 class="h3 mb-1 text-gray-800">Border Utilities</h1>
+          <p class="mb-4">Bootstrap's default utility classes can be found on the official <a href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities below were created to extend this theme past the default utility classes built into Bootstrap's framework.</p>
 
           <!-- Content Row -->
           <div class="row">
 
-            <!-- First Column -->
-            <div class="col-lg-4">
+            <!-- Border Left Utilities -->
+            <div class="col-lg-6">
 
-              <!-- Custom Text Color Utilities -->
-              <div class="card shadow mb-4">
-                  <div class="card-header py-3">
-                      <h6 class="m-0 font-weight-bold text-primary">Set Light Settings</h6>
-                    </div>
-                    <div class="card-body">
-
-                  <script type=text/javascript>
-                    $(function() {
-                      $('button#set_light').bind('click', function() {
-                        $("#light_settings_updated").modal()
-                        console.log("this is been actioned");
-                        $.getJSON($SCRIPT_ROOT + '/_light', {
-                          start: parseInt($('input[name="start"]').val()),
-                          stop: parseInt($('input[name="stop"]').val())
-                        }, function(data) {
-                          $("#light_settings_input").text(data.result);
-                        });
-                        return false;
-                      });
-                    });
-                  </script>
-                  <!-- <h2>Set light settings</h2> -->
-                    <form class="form-inline">
-                        <div  class="input-group clockpicker mb-2 mr-sm-2" styles="width: 150px;">
-                            <input type="text" class="form-control" value="{{env_settings.start}}:00" name=start>
-                            <div styles="width:100px !important;" class="input-group-append">
-                                <span  class="text-success input-group-text"> ON</span>
-                            </div>
-                        </div>
-                        <div class="input-group clockpicker mb-2 mr-sm-2">
-                            <input type="text" class="form-control" value="{{env_settings.stop}}:00" name=stop>
-                            <div class="input-group-append">
-                                <span class="text-danger input-group-text">OFF</span>  
-                            </div>
-                        </div>
-                      </form>
-                      <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#light_settings_updated"> -->
-                      <button href=# id=set_light class="btn btn-primary mb-2">Set Parameters</button>
-</div>
-                       
-
-                    <script type="text/javascript">
-                    $('.clockpicker').clockpicker();
-                    </script>
-<!-- 
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Custom Text Color Utilities</h6>
-                </div> -->
-                <!-- <div class="card-body">
-                  <p class="text-gray-100 p-3 bg-dark m-0">.text-gray-100</p>
-                  <p class="text-gray-200 p-3 bg-dark m-0">.text-gray-200</p>
-                  <p class="text-gray-300 p-3 bg-dark m-0">.text-gray-300</p>
-                  <p class="text-gray-400 p-3 bg-dark m-0">.text-gray-400</p>
-                  <p class="text-gray-500 p-3 m-0">.text-gray-500</p>
-                  <p class="text-gray-600 p-3 m-0">.text-gray-600</p>
-                  <p class="text-gray-700 p-3 m-0">.text-gray-700</p>
-                  <p class="text-gray-800 p-3 m-0">.text-gray-800</p>
-                  <p class="text-gray-900 p-3 m-0">.text-gray-900</p>
-                </div>  -->
+              <div class="card mb-4 py-3 border-left-primary">
+                <div class="card-body">
+                  .border-left-primary
+                </div>
               </div>
 
-              <!-- Custom Font Size Utilities -->
-              <!-- <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Custom Font Size Utilities</h6>
-                </div>
+              <div class="card mb-4 py-3 border-left-success">
                 <div class="card-body">
-                  <p class="text-xs">.text-xs</p>
-                  <p class="text-lg mb-0">.text-lg</p>
+                  .border-left-success
                 </div>
-              </div> -->
+              </div>
 
-            </div>
-
-            <!-- Second Column -->
-            <div class="col-lg-4">
-
-              <!-- Background Gradient Utilities -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Current Light Settings</h6>
-                </div>
-                
+              <div class="card mb-4 py-3 border-left-info">
                 <div class="card-body">
-                    <p>Start: {{env_settings.start}}:00</p>
-                    <p>Stop: {{env_settings.stop}}:00</p>
-                  <!-- <div class="px-3 py-5 bg-gradient-primary text-white">.bg-gradient-primary</div>
-                  <div class="px-3 py-5 bg-gradient-success text-white">.bg-gradient-success</div>
-                  <div class="px-3 py-5 bg-gradient-info text-white">.bg-gradient-info</div>
-                  <div class="px-3 py-5 bg-gradient-warning text-white">.bg-gradient-warning</div>
-                  <div class="px-3 py-5 bg-gradient-danger text-white">.bg-gradient-danger</div> -->
+                  .border-left-info
+                </div>
+              </div>
+
+              <div class="card mb-4 py-3 border-left-warning">
+                <div class="card-body">
+                  .border-left-warning
+                </div>
+              </div>
+
+              <div class="card mb-4 py-3 border-left-danger">
+                <div class="card-body">
+                  .border-left-danger
                 </div>
               </div>
 
             </div>
 
-            <!-- Third Column -->
-            <!-- <div class="col-lg-4"> -->
+            <!-- Border Bottom Utilities -->
+            <div class="col-lg-6">
 
-              <!-- Grayscale Utilities -->
-              <!-- <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Custom Grayscale Background Utilities</h6>
-                </div>
+              <div class="card mb-4 py-3 border-bottom-primary">
                 <div class="card-body">
-                  <div class="p-3 bg-gray-100">.bg-gray-100</div>
-                  <div class="p-3 bg-gray-200">.bg-gray-200</div>
-                  <div class="p-3 bg-gray-300">.bg-gray-300</div>
-                  <div class="p-3 bg-gray-400">.bg-gray-400</div>
-                  <div class="p-3 bg-gray-500 text-white">.bg-gray-500</div>
-                  <div class="p-3 bg-gray-600 text-white">.bg-gray-600</div>
-                  <div class="p-3 bg-gray-700 text-white">.bg-gray-700</div>
-                  <div class="p-3 bg-gray-800 text-white">.bg-gray-800</div>
-                  <div class="p-3 bg-gray-900 text-white">.bg-gray-900</div>
-                </div>
-              </div> -->
-            <!-- </div> -->
-
-          </div>
-
-
-          <div class="row">
-
-              <!-- First Column -->
-              <div class="col-lg-4">
-  
-                <!-- Custom Text Color Utilities -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Set Temperature Settings</h6>
-                      </div>
-                      <div class="card-body">
-                          <script type=text/javascript>
-                            $(function() {
-                              $('button#set_temp').bind('click', function() {
-                                $("#temperature_settings_updated").modal()
-                                $.getJSON($SCRIPT_ROOT + '/_temp', {
-                                  temp: $('select[name="temp"]').val(),
-                                  hum: $('select[name="hum"]').val()
-                                }, function(data) {
-                                  $("#env_settings_input").text(data.result);
-                                });
-                                return false;
-                              });
-                            });
-                          </script>
-                          <!-- <h2>Set temperature settings</h2>
-                          <p><input type=text min=15 max=32 size=2 name=temp>
-                             <input type=text min=15 max=32 size=2 name=hum>
-                             <span id=env_settings_input></span>
-                          <p><a href=# id=set_temp>Set parameters</a> -->
-
-                            <form class="form-inline">
-
-
-                                <div class="form-group">
-                                    <!-- <label for="exampleSelect1">Example select</label> -->
-                                    
-                                    <select name="temp" class="form-control mb-2" id="exampleSelect1">
-                                      <option>10</option>
-                                      <option>11</option>
-                                      <option>12</option>
-                                      <option>13</option>
-                                      <option>14</option>
-                                      <option>15</option>
-                                      <option>16</option>
-                                      <option>17</option>
-                                      <option>18</option>
-                                      <option>19</option>
-                                      <option>20</option>
-                                    </select>
-                                
-                                  <div class="input-group-append mb-2 mr-sm-2">
-                                      <span  class="text-primary input-group-text"> MIN</span>
-                                  </div>
-                                </div>
-                                  <div class="form-group">
-                                      <select name="hum" class="form-control mb-2" id="exampleSelect1">
-                                        <option>20</option>
-                                        <option>21</option>
-                                        <option>22</option>
-                                        <option>23</option>
-                                        <option>24</option>
-                                        <option>25</option>
-                                        <option>26</option>
-                                        <option>27</option>
-                                        <option>28</option>
-                                        <option>29</option>
-                                        <option>30</option>
-                                        <option>31</option>
-                                      </select>
-                                    </div>
-                                    <div class="input-group-append mb-2 mr-sm-2">
-                                        <span  class="text-warning input-group-text"> MAX</span>
-                                    </div>
-                              </form>
-                              <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#light_settings_updated"> -->
-                              <button href=# id=set_temp class="btn btn-primary mb-2">Set Parameters</button>
-
-
-                      </div>
-
-
-
-
+                  .border-bottom-primary
                 </div>
               </div>
 
-
-              <div class="col-lg-4">
-
-                  <!-- Background Gradient Utilities -->
-                  <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                      <h6 class="m-0 font-weight-bold text-primary">Current Temperature Settings</h6>
-                    </div>
-                    
-                    <div class="card-body">
-                        <p>Max: {{env_settings.max_temperature}}C</p>
-                        <p>Min: {{env_settings.min_temperature}}C</p>
-                      <!-- <div class="px-3 py-5 bg-gradient-primary text-white">.bg-gradient-primary</div>
-                      <div class="px-3 py-5 bg-gradient-success text-white">.bg-gradient-success</div>
-                      <div class="px-3 py-5 bg-gradient-info text-white">.bg-gradient-info</div>
-                      <div class="px-3 py-5 bg-gradient-warning text-white">.bg-gradient-warning</div>
-                      <div class="px-3 py-5 bg-gradient-danger text-white">.bg-gradient-danger</div> -->
-                    </div>
-                  </div>
-    
+              <div class="card mb-4 py-3 border-bottom-success">
+                <div class="card-body">
+                  .border-bottom-success
                 </div>
+              </div>
+
+              <div class="card mb-4 py-3 border-bottom-info">
+                <div class="card-body">
+                  .border-bottom-info
+                </div>
+              </div>
+
+              <div class="card mb-4 py-3 border-bottom-warning">
+                <div class="card-body">
+                  .border-bottom-warning
+                </div>
+              </div>
+
+              <div class="card mb-4 py-3 border-bottom-danger">
+                <div class="card-body">
+                  .border-bottom-danger
+                </div>
+              </div>
+
+            </div>
+
           </div>
-
-
-
-
-
 
         </div>
         <!-- /.container-fluid -->
@@ -619,7 +420,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Demeter - Make It Green 2019</span>
+            <span>Copyright &copy; Your Website 2019</span>
           </div>
         </div>
       </footer>
@@ -635,71 +436,6 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- updated light settings  -->
-  <div class="modal fade" id="light_settings_updated" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">The time settings have been updated</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Okay">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <!-- <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
-          </div> -->
-        </div>
-      </div>
-    </div>
-
-
-
-    <!-- updated temperature settings  -->
-  <div class="modal fade" id="temperature_settings_updated" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">The temperature settings have been updated</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Okay">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <!-- <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
-          </div> -->
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- Logout Modal-->
   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -729,19 +465,6 @@
 
   <!-- Custom scripts for all pages-->
   <script src="/static/js/sb-admin-2.min.js"></script>
-  <!-- <script src="/static/clockpicker/dist/bootstrap-clockpicker.js"></script>
-  <script src="/static/clockpicker/dist/jquery-clockpicker.js"></script>
-  <script src="/static/clockpicker/src/clockpicker.js"></script>
-
-
-  <script type="text/javascript" src="/static/clockpicker/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/assets/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
-<script type="text/javascript" src="/static/clockpicker/dist/jquery-clockpicker.min.js"></script> -->
-
-  
-  
-  
 
 </body>
 

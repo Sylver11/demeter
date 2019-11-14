@@ -25,11 +25,14 @@ def _arduino_connection():
 
 def write_env_settings(start, stop, min_temperature, max_temperature):
     arduino = _arduino_connection()
+    print(int(start.decode('ascii')))
+    print(int(stop.decode('ascii')))
     now = datetime.now()
     current_time = now.strftime("%H")
+    print(current_time)
     print("writing temperature and light settings from database to arduino")
     arduino.write(bytes('<', 'utf-8'))
-    if (int(current_time) > int(start.decode('ascii')) and int(current_time) < int(stop.decode('ascii'))):
+    if (int(current_time) >= int(start.decode('ascii')) and int(current_time) < int(stop.decode('ascii'))):
         arduino.write(bytes('L', 'utf-8'))
         arduino.write(struct.pack('>B', 1))
        # arduino.write(bytes('1', 'utf-8'))
