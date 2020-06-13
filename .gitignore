@@ -1,0 +1,13 @@
+.DS_Store
+.vscode
+.env
+env
+*.swp
+*.swo
+__pycache__/
+.app.py.swj
+.app.py.swk
+.app.py.swl
+.app.py.swm
+.app.py.swn
+
